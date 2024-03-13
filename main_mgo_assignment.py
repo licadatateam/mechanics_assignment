@@ -282,12 +282,17 @@ def geocode(barangays: dict,
     except Exception as e:
         raise e
 
-def main(selected_date : dt = dt.today().date(),
+def main(selected_date : dt = dt.today().date() or str,
          mechanic_counts_dict : dict = None):
     
     
     # configuration settings
     config_dict = load_config()
+    
+    if isinstance(selected_date, str):
+        selected_date = pd.to_datetime(selected_date).date()
+    else:
+        pass
     
     # Load Redash query result
     appointments = gather_data(config_dict['redashApiKey'], selected_date)
@@ -307,14 +312,7 @@ def main(selected_date : dt = dt.today().date(),
     appointments,similarity,mechanics_per_hub,df_hub_service = clustering_methods.cluster_appointments(appointments,
                                                                                                        config_dict,
                                                                                                        mechanic_counts_dict)
-    appointments.loc[:, 'appointment_date'] = dt.today().date().strftime('%Y-%m-%d')
-    # appointments.loc[:, 'created_at'] = pd.NaT
-    # appointments.loc[:, 'updated_at'] = pd.NaT
-    # if appointments['created_at'].isnull().sum() == len(appointments):
-    #     appointments.loc[:, 'created_at'] = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-    # else:
-    #     appointments.loc[:, 'updated_at'] = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-    
+    appointments.loc[:, 'appointment_date'] = selected_date.strftime('%Y-%m-%d')
     show_cols = ['appointment_date', 'appointment_id', 'hub_solver']
     
     return appointments[show_cols].to_json(orient = 'index')

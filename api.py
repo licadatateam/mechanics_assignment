@@ -11,9 +11,9 @@ import main_mgo_assignment
 
 app = Flask(__name__)
 
-@app.route('/api/mgo/hubassign', methods = ['GET'])
-def get_mgo_assignments():
-    results = main_mgo_assignment.main()
+@app.route('/api/mgo/hubassign_<string:selected_date>', methods = ['GET'])
+def get_mgo_assignments(selected_date):
+    results = main_mgo_assignment.main(selected_date)
     # json.loads((r.content).decode('utf-8'))
     return results
 
