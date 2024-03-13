@@ -1,0 +1,11 @@
+pandas
+streamlit
+regex
+numpy
+fuzzywuzzy
+levenshtein
+selenium
+folium
+streamlit_folium
+ortools
+scikit-learn
